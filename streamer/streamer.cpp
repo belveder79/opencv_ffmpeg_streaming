@@ -99,6 +99,9 @@ Streamer::Streamer()
 
 void Streamer::cleanup()
 {
+    if(format_ctx)
+      av_write_trailer(format_ctx);
+
     if(out_codec_ctx) {
         avcodec_close(out_codec_ctx);
         avcodec_free_context(&out_codec_ctx);
@@ -163,6 +166,7 @@ int Streamer::init(const StreamerConfig &streamer_config)
 
     //initialize format context for output with flv and no filename
     avformat_alloc_output_context2(&format_ctx, nullptr, "flv", nullptr);
+    // avformat_alloc_output_context2(&format_ctx, nullptr, "rtsp", config.server.c_str());
     if(!format_ctx) {
         return 1;
     }
