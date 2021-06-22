@@ -164,9 +164,15 @@ int Streamer::init(const StreamerConfig &streamer_config)
         return 1;
     }
 
-    //initialize format context for output with flv and no filename
-    avformat_alloc_output_context2(&format_ctx, nullptr, "flv", nullptr);
-    // avformat_alloc_output_context2(&format_ctx, nullptr, "rtsp", config.server.c_str());
+    if(config.server.rfind("rtsp", 0) == 0) {
+      // starts with rtsp
+      avformat_alloc_output_context2(&format_ctx, nullptr, "rtsp", config.server.c_str());
+    }
+    else
+    {
+      //initialize format context for output with flv and no filename
+      avformat_alloc_output_context2(&format_ctx, nullptr, "flv", nullptr);
+    }
     if(!format_ctx) {
         return 1;
     }
