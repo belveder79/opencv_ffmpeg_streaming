@@ -91,7 +91,8 @@ Streamer::Streamer()
     out_stream = nullptr;
     out_codec_ctx = nullptr;
     rtmp_server_conn = false;
-    av_register_all();
+    // deprecated from ffmpeg 4.x onwards
+    //av_register_all();
     inv_stream_timebase = 30.0;
     network_init_ok = !avformat_network_init();
 }
@@ -190,7 +191,7 @@ int Streamer::init(const StreamerConfig &streamer_config)
 
     //use selected codec
     AVCodecID codec_id = AV_CODEC_ID_H264;
-    out_codec = avcodec_find_encoder(codec_id);
+    out_codec = const_cast<AVCodec*>(avcodec_find_encoder(codec_id));
     if (!(out_codec)) {
         fprintf(stderr, "Could not find encoder for '%s'\n",
                 avcodec_get_name(codec_id));
